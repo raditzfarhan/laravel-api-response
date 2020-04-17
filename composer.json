@@ -1,0 +1,32 @@
+{
+	"name": "raditzfarhan/laravel-api-response",
+	"description": "Laravel and Lumen API response transformer",
+	"type": "laravel-package",
+	"keywords": [ "laravel", "lumen", "api", "response", "transformer", "responder" ],
+	"require": {
+		"php": "^7.2.5",
+		"illuminate/support": "^6.0|^7.0|^8.0",
+		"illuminate/http": "^6.0|^7.0|^8.0"
+	},
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Raditz Farhan",
+			"email": "raditzfarhan@gmail.com"
+		}
+	],
+	"minimum-stability": "dev",
+	"autoload": {
+		"psr-4": {
+			"RaditzFarhan\\ApiResponse\\": "src/"
+		}
+	},
+	"extra": {
+		"laravel": {
+			"providers": [ "RaditzFarhan\\ApiResponse\\ApiResponseServiceProvider" ],
+			"aliases": {
+				"ApiResponse": "RaditzFarhan\\ApiResponse\\Facades\\ApiResponse"
+			}
+		}
+	}
+}
