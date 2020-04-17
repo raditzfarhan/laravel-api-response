@@ -70,7 +70,7 @@ $response = \ApiResponse::success();
 $response = \ApiResponse::failed();
 
 ```
-The response will return a Illuminate\Http\Response instance just like when u call `response()` helper method.
+The response will return a `Illuminate\Http\Response` instance just like when u call `response()` helper method.
 
 > By default, success will use http **200** code if not set, and failed will use http **500** code if not set.
 
