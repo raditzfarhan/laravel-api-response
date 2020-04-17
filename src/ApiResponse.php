@@ -90,6 +90,26 @@ class ApiResponse
     }
 
     /**
+     * Return create json response.
+     *
+     * @return Illuminate\Http\Response    
+     */
+    public function created($data = null)
+    {
+        $this->http_code = 201;
+
+        if ($data) {
+            $this->data = $data;
+        }
+
+        if (!$this->message) {
+            $this->message = 'Created.';
+        }
+
+        return $this->success();
+    }
+
+    /**
      * Dynamically handle setter.
      *
      * @param  string  $name
