@@ -29,10 +29,10 @@ class ApiResponse
 
     /**
      * Return success json response.
-     *    
-     * @return Illuminate\Http\Response  
-     * 
-     * @throws \BadMethodCallException   
+     *
+     * @return Illuminate\Http\Response
+     *
+     * @throws \BadMethodCallException
      */
     public function success()
     {
@@ -62,10 +62,10 @@ class ApiResponse
 
     /**
      * Return failed json response.
-     *    
-     * @return Illuminate\Http\Response  
-     * 
-     * @throws \BadMethodCallException   
+     *
+     * @return Illuminate\Http\Response
+     *
+     * @throws \BadMethodCallException
      */
     public function failed()
     {
@@ -94,7 +94,7 @@ class ApiResponse
      *
      * @param  string  $name
      * @param  array  $value
-     * @return void     
+     * @return void
      */
     public function __set($name, $value)
     {
@@ -107,7 +107,7 @@ class ApiResponse
      * Dynamically handle getter.
      *
      * @param  string  $name
-     * @return mixed     
+     * @return mixed
      */
     public function __get($name)
     {
@@ -130,7 +130,6 @@ class ApiResponse
         $attr_name = Str::snake($name);
 
         if (collect($this->attributes)->contains($attr_name)) {
-
             $this->$attr_name = count($arguments) > 1 ? $arguments : $arguments[0];
 
             return $this;
