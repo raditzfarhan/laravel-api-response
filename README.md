@@ -49,7 +49,9 @@ You will also need to enable `Facades`  in `bootstrap/app.php`:
 
 ```php
 ..
-$app->withFacades();
+$app->withFacades(true, [
+    RaditzFarhan\ApiResponse\Facades\ApiResponse::class => 'ApiResponse'
+]);
 ...
 ```
 
