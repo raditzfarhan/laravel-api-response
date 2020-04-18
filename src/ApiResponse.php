@@ -115,6 +115,26 @@ class ApiResponse
     }
 
     /**
+     * Return validation error json response.
+     *
+     * @return Illuminate\Http\Response    
+     */
+    public function validationError($errors = null)
+    {
+        $this->http_code = 422;
+
+        if ($errors) {
+            $this->errors = $errors;
+        }
+
+        if (!$this->message) {
+            $this->message = 'Validation error.';
+        }
+
+        return $this->failed();
+    }
+
+    /**
      * Re-arrange payload.
      *
      * @return void   
