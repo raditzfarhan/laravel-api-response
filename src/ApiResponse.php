@@ -4,6 +4,7 @@ namespace RaditzFarhan\ApiResponse;
 
 use BadMethodCallException;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 
 class ApiResponse
 {
@@ -57,6 +58,8 @@ class ApiResponse
             ));
         }
 
+        $this->reArrangePayload();
+
         return response()->json($this->payload, $this->http_code);
     }
 
@@ -86,6 +89,8 @@ class ApiResponse
             ));
         }
 
+        $this->reArrangePayload();
+
         return response()->json($this->payload, $this->http_code);
     }
 
@@ -107,6 +112,23 @@ class ApiResponse
         }
 
         return $this->success();
+    }
+
+    /**
+     * Re-arrange payload.
+     *
+     * @return void   
+     */
+    private function reArrangePayload()
+    {
+        $attributes = $this->attributes;
+        krsort($attributes);
+
+        foreach ($attributes as $attr) {
+            if (isset($this->payload[$attr])) {
+                $this->payload = Arr::prepend($this->payload, $this->$attr, $attr);
+            }
+        }
     }
 
     /**
