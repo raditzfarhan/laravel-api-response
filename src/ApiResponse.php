@@ -3,8 +3,8 @@
 namespace RaditzFarhan\ApiResponse;
 
 use BadMethodCallException;
-use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class ApiResponse
 {
@@ -99,7 +99,7 @@ class ApiResponse
     /**
      * Return create json response.
      *
-     * @return Illuminate\Http\Response    
+     * @return Illuminate\Http\Response
      */
     public function created($data = null)
     {
@@ -119,7 +119,7 @@ class ApiResponse
     /**
      * Return validation error json response.
      *
-     * @return Illuminate\Http\Response    
+     * @return Illuminate\Http\Response
      */
     public function validationError($errors = null)
     {
@@ -139,7 +139,7 @@ class ApiResponse
     /**
      * Return paginate json response.
      *
-     * @return Illuminate\Http\Response    
+     * @return Illuminate\Http\Response
      */
     public function collection($data)
     {
@@ -175,7 +175,7 @@ class ApiResponse
     /**
      * Re-arrange payload.
      *
-     * @return void   
+     * @return void
      */
     private function reArrangePayload()
     {
