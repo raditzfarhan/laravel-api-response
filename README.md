@@ -97,8 +97,14 @@ Add/Change payload data by chaining more methods as below:
 // Example #1
 return ApiResponse::httpCode(201)->message('Created new record!')->data(['name' => 'Raditz Farhan', 'country' => 'MY'])->success();
 
+// Example #1 can be shortend to
+return ApiResponse::created(['name' => 'Raditz Farhan', 'country' => 'MY']);
+
 // Example #2
 return ApiResponse::httpCode(422)->message('Validation error!')->errors(['name' => ['Name field is required.']])->failed();
+
+// Example #2 can be shortend to
+return ApiResponse::validationError(['name' => ['Name field is required.']]);
 ```
 Above call will result in below:
 ```json
