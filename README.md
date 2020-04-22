@@ -125,6 +125,43 @@ Above call will result in below:
     },
 }
 ```
+Use `collection` method to return paginate result that includes `meta` attribute:
+```php
+return ApiResponse::collection(App\Post::paginate());
+```
+Will return below result:
+```json
+{
+  "status": true,
+  "http_code": 200,
+  "message": "Success.",
+  "data": [
+    {
+      "id": 1,
+      "title": "First post",
+      "slug": "first-post",
+      "content": "This is the first post",
+      "sort_order": 1,
+      "created_at": "2020-04-21T13:40:45.000000Z",
+      "updated_at": "2020-04-21T13:40:45.000000Z"
+    },
+    ...
+  ],
+  "meta": {
+    "currenct_page": 1,
+    "last_page": 3,
+    "from": 1,
+    "to": 2,
+    "per_page": 2,
+    "total": 6,
+    "first_page_url": "http://your-app-url?page=1",
+    "prev_page_url": null,
+    "next_page_url": "http://your-app-url?page=2",
+    "last_page_url": "http://your-app-url?page=3",
+    "has_more_pages": true
+  }
+}
+```
 
 ## Change log
 

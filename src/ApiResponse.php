@@ -26,6 +26,7 @@ class ApiResponse
         'message',
         'data',
         'errors',
+        'meta',
     ];
 
     /**
@@ -132,6 +133,36 @@ class ApiResponse
         }
 
         return $this->failed();
+    }
+
+    /**
+     * Return paginate json response.
+     *
+     * @return Illuminate\Http\Response    
+     */
+    public function collection($data)
+    {
+        if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator) {
+            if ($data->items()) {
+                $this->data = $data->items();
+            }
+
+            $this->meta = [
+                'currenct_page' => $data->currentPage(),
+                'last_page' => $data->lastPage(),
+                'from' => $data->firstItem(),
+                'to' => $data->lastItem(),
+                'per_page' => $data->perPage(),
+                'total' => $data->total(),
+                'first_page_url' => $data->url(1),
+                'prev_page_url' => $data->previousPageUrl(),
+                'next_page_url' => $data->nextPageUrl(),
+                'last_page_url' => $data->url($data->lastPage()),
+                'has_more_pages' => $data->hasMorePages(),
+            ];
+        }
+
+        return $this->success();
     }
 
     /**
