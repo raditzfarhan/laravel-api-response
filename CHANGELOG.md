@@ -2,6 +2,17 @@
 
 All notable changes to Laravel API Response will be documented in this file.
 
+## Version 1.0.1 (2020-04-22)
+
+### Changed
+- Rearrange response attributes to be in order.
+- Fix bug when setting attribute.
+
+### Added
+- Add created method.
+- Add validationError method.
+- Add collection method.
+
 ## Version 1.0.0 (2020-04-17)
 
 ### Added
