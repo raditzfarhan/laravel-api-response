@@ -27,6 +27,7 @@ class ApiResponse
         'data',
         'errors',
         'meta',
+        'links',
     ];
 
     /**
@@ -142,7 +143,10 @@ class ApiResponse
      */
     public function collection($data)
     {
-        if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator) {
+        if (
+            $data instanceof \Illuminate\Pagination\LengthAwarePaginator
+            || $data instanceof \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+        ) {
             if ($data->items()) {
                 $this->data = $data->items();
             }
@@ -154,11 +158,14 @@ class ApiResponse
                 'to' => $data->lastItem(),
                 'per_page' => $data->perPage(),
                 'total' => $data->total(),
-                'first_page_url' => $data->url(1),
-                'prev_page_url' => $data->previousPageUrl(),
-                'next_page_url' => $data->nextPageUrl(),
-                'last_page_url' => $data->url($data->lastPage()),
                 'has_more_pages' => $data->hasMorePages(),
+            ];
+
+            $this->links = [
+                'first' => $data->url(1),
+                'last' => $data->url($data->lastPage()),
+                'prev' => $data->previousPageUrl(),
+                'next' => $data->nextPageUrl(),
             ];
         }
 
