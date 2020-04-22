@@ -149,6 +149,8 @@ class ApiResponse
         ) {
             if ($data->items()) {
                 $this->data = $data->items();
+            } else {
+                $this->data = [];
             }
 
             $this->meta = [
