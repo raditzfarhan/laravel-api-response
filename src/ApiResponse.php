@@ -4,6 +4,7 @@ namespace RaditzFarhan\ApiResponse;
 
 use BadMethodCallException;
 use Illuminate\Support\Str;
+use Illuminate\Support\Arr;
 
 class ApiResponse
 {
@@ -25,6 +26,7 @@ class ApiResponse
         'message',
         'data',
         'errors',
+        'meta',
     ];
 
     /**
@@ -57,6 +59,8 @@ class ApiResponse
             ));
         }
 
+        $this->reArrangePayload();
+
         return response()->json($this->payload, $this->http_code);
     }
 
@@ -86,7 +90,96 @@ class ApiResponse
             ));
         }
 
+        $this->reArrangePayload();
+
         return response()->json($this->payload, $this->http_code);
+    }
+
+    /**
+     * Return create json response.
+     *
+     * @return Illuminate\Http\Response    
+     */
+    public function created($data = null)
+    {
+        $this->http_code = 201;
+
+        if ($data) {
+            $this->data = $data;
+        }
+
+        if (!$this->message) {
+            $this->message = 'Created.';
+        }
+
+        return $this->success();
+    }
+
+    /**
+     * Return validation error json response.
+     *
+     * @return Illuminate\Http\Response    
+     */
+    public function validationError($errors = null)
+    {
+        $this->http_code = 422;
+
+        if ($errors) {
+            $this->errors = $errors;
+        }
+
+        if (!$this->message) {
+            $this->message = 'Validation error.';
+        }
+
+        return $this->failed();
+    }
+
+    /**
+     * Return paginate json response.
+     *
+     * @return Illuminate\Http\Response    
+     */
+    public function collection($data)
+    {
+        if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator) {
+            if ($data->items()) {
+                $this->data = $data->items();
+            }
+
+            $this->meta = [
+                'currenct_page' => $data->currentPage(),
+                'last_page' => $data->lastPage(),
+                'from' => $data->firstItem(),
+                'to' => $data->lastItem(),
+                'per_page' => $data->perPage(),
+                'total' => $data->total(),
+                'first_page_url' => $data->url(1),
+                'prev_page_url' => $data->previousPageUrl(),
+                'next_page_url' => $data->nextPageUrl(),
+                'last_page_url' => $data->url($data->lastPage()),
+                'has_more_pages' => $data->hasMorePages(),
+            ];
+        }
+
+        return $this->success();
+    }
+
+    /**
+     * Re-arrange payload.
+     *
+     * @return void   
+     */
+    private function reArrangePayload()
+    {
+        $attributes = $this->attributes;
+        krsort($attributes);
+
+        foreach ($attributes as $attr) {
+            if (isset($this->payload[$attr])) {
+                $this->payload = Arr::prepend($this->payload, $this->$attr, $attr);
+            }
+        }
     }
 
     /**
@@ -130,7 +223,7 @@ class ApiResponse
         $attr_name = Str::snake($name);
 
         if (collect($this->attributes)->contains($attr_name)) {
-            $this->$attr_name = count($arguments) > 1 ? $arguments : $arguments[0];
+            $this->$attr_name = count($arguments) > 1 ? $arguments : (isset($arguments[0]) ? $arguments[0] : $arguments);
 
             return $this;
         } else {
