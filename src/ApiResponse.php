@@ -117,6 +117,46 @@ class ApiResponse
     }
 
     /**
+     * Return bad request json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function badRequest($message = null)
+    {
+        return $this->commonError(401, $message ?? $this->message ?? 'Bad request.');
+    }
+
+    /**
+     * Return unauthorized json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function unauthorized($message = null)
+    {
+        return $this->commonError(401, $message ?? $this->message ?? 'Unauthorized.');
+    }
+
+    /**
+     * Return forbidden json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function forbidden($message = null)
+    {
+        return $this->commonError(403, $message ?? $this->message ?? 'Forbidden.');
+    }
+
+    /**
+     * Return not found json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function notFound($message = null)
+    {
+        return $this->commonError(404, $message ?? $this->message ?? 'Not found.');
+    }
+
+    /**
      * Return validation error json response.
      *
      * @return Illuminate\Http\Response
@@ -131,6 +171,32 @@ class ApiResponse
 
         if (!$this->message) {
             $this->message = 'Validation error.';
+        }
+
+        return $this->failed();
+    }
+
+    /**
+     * Return internal server error json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function internalServerError($message = null)
+    {
+        return $this->commonError(500, $message ?? $this->message ?? 'Internal Server Error.');
+    }
+
+    /**
+     * Return common error json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function commonError($http_code, $message = null)
+    {
+        $this->http_code = $http_code;
+
+        if ($message) {
+            $this->message = $message;
         }
 
         return $this->failed();
