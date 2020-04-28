@@ -123,7 +123,7 @@ class ApiResponse
      */
     public function badRequest($message = null)
     {
-        return $this->commonError(401, $message ?? $this->message ?? 'Bad request.');
+        return $this->commonError(400, $message ?? $this->message ?? 'Bad request.');
     }
 
     /**
