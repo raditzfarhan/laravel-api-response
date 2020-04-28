@@ -1,13 +1,15 @@
 <p align="center"><img src="https://res.cloudinary.com/raditzfarhan/image/upload/v1587107749/laravel-api-response_c1wbwr.svg" width="640"></p>
 
-<p align="center">   
-    <a href="https://github.com/raditzfarhan/laravel-api-response"><img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square" alt="License"></a>
+<p align="center">  
+    <a href="https://github.com/raditzfarhan/laravel-api-response/releases"><img src="https://img.shields.io/packagist/v/raditzfarhan/laravel-api-response?style=flat-square" alt="Latest Version"></img></a>
+     <a href="https://packagist.org/packages/raditzfarhan/laravel-api-response"><img src="https://img.shields.io/packagist/dt/raditzfarhan/laravel-api-response?color=red&style=flat-square" alt="Total Downloads"></img></a>
+    <a href="https://github.com/raditzfarhan/laravel-api-response"><img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square" alt="License"></a>    
     <a href="https://github.com/raditzfarhan/laravel-api-response"><img src="https://github.styleci.io/repos/7548986/shield?style=square" alt="styleci"></img></a>
 </p>
 
 # Laravel API Response
 
-Laravel and Lumen API response transformer
+Laravel and Lumen API response transformer/formatter.
 
 ## Installation
 
@@ -97,8 +99,14 @@ Add/Change payload data by chaining more methods as below:
 // Example #1
 return ApiResponse::httpCode(201)->message('Created new record!')->data(['name' => 'Raditz Farhan', 'country' => 'MY'])->success();
 
+// or can be shorten to
+return ApiResponse::created(['name' => 'Raditz Farhan', 'country' => 'MY']);
+
 // Example #2
 return ApiResponse::httpCode(422)->message('Validation error!')->errors(['name' => ['Name field is required.']])->failed();
+
+// or can be shorten to
+return ApiResponse::validationError(['name' => ['Name field is required.']]);
 ```
 Above call will result in below:
 ```json
@@ -125,11 +133,15 @@ Above call will result in below:
     },
 }
 ```
-Use `collection` method to return paginate result that includes `meta` attribute:
+
+Use `collection` method to return paginate result that includes `meta` and `links` attribute:
+
 ```php
 return ApiResponse::collection(App\Post::paginate());
 ```
+
 Will return below result:
+
 ```json
 {
   "status": true,
@@ -151,17 +163,38 @@ Will return below result:
     "currenct_page": 1,
     "last_page": 3,
     "from": 1,
-    "to": 2,
-    "per_page": 2,
-    "total": 6,
-    "first_page_url": "http://your-app-url?page=1",
-    "prev_page_url": null,
-    "next_page_url": "http://your-app-url?page=2",
-    "last_page_url": "http://your-app-url?page=3",
+    "to": 25,
+    "per_page": 25,
+    "total": 60,
     "has_more_pages": true
+  },
+  "links": {
+    "first": "http://your-app-url?page=1",
+    "last": "http://your-app-url?page=3",
+    "prev": null,
+    "next": "http://your-app-url?page=2"
   }
 }
 ```
+
+Besides `created` and `validationError`, below shorthand methods are available for your convenience:
+```php
+// return http 400 Bad request error.
+return ApiResponse::badRequest('Optional message here'); 
+
+// return http 401 Unauthorized error.
+return ApiResponse::unauthorized(); 
+
+// return http 403 Forbidden error.
+return ApiResponse::forbidden(); 
+
+// return http 404 Not found error.
+return ApiResponse::notFound(); 
+
+// return http 500 Internal server error.
+return ApiResponse::internalServerError(); 
+```
+> Tip: Pass a message to the method to put your own custom message.
 
 ## Change log
 

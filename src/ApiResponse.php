@@ -3,8 +3,8 @@
 namespace RaditzFarhan\ApiResponse;
 
 use BadMethodCallException;
-use Illuminate\Support\Str;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 
 class ApiResponse
 {
@@ -27,6 +27,7 @@ class ApiResponse
         'data',
         'errors',
         'meta',
+        'links',
     ];
 
     /**
@@ -98,7 +99,7 @@ class ApiResponse
     /**
      * Return create json response.
      *
-     * @return Illuminate\Http\Response    
+     * @return Illuminate\Http\Response
      */
     public function created($data = null)
     {
@@ -116,9 +117,49 @@ class ApiResponse
     }
 
     /**
+     * Return bad request json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function badRequest($message = null)
+    {
+        return $this->commonError(401, $message ?? $this->message ?? 'Bad request.');
+    }
+
+    /**
+     * Return unauthorized json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function unauthorized($message = null)
+    {
+        return $this->commonError(401, $message ?? $this->message ?? 'Unauthorized.');
+    }
+
+    /**
+     * Return forbidden json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function forbidden($message = null)
+    {
+        return $this->commonError(403, $message ?? $this->message ?? 'Forbidden.');
+    }
+
+    /**
+     * Return not found json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function notFound($message = null)
+    {
+        return $this->commonError(404, $message ?? $this->message ?? 'Not found.');
+    }
+
+    /**
      * Return validation error json response.
      *
-     * @return Illuminate\Http\Response    
+     * @return Illuminate\Http\Response
      */
     public function validationError($errors = null)
     {
@@ -136,15 +177,46 @@ class ApiResponse
     }
 
     /**
+     * Return internal server error json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function internalServerError($message = null)
+    {
+        return $this->commonError(500, $message ?? $this->message ?? 'Internal Server Error.');
+    }
+
+    /**
+     * Return common error json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function commonError($http_code, $message = null)
+    {
+        $this->http_code = $http_code;
+
+        if ($message) {
+            $this->message = $message;
+        }
+
+        return $this->failed();
+    }
+
+    /**
      * Return paginate json response.
      *
-     * @return Illuminate\Http\Response    
+     * @return Illuminate\Http\Response
      */
     public function collection($data)
     {
-        if ($data instanceof \Illuminate\Pagination\LengthAwarePaginator) {
+        if (
+            $data instanceof \Illuminate\Pagination\LengthAwarePaginator
+            || $data instanceof \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+        ) {
             if ($data->items()) {
                 $this->data = $data->items();
+            } else {
+                $this->data = [];
             }
 
             $this->meta = [
@@ -154,11 +226,14 @@ class ApiResponse
                 'to' => $data->lastItem(),
                 'per_page' => $data->perPage(),
                 'total' => $data->total(),
-                'first_page_url' => $data->url(1),
-                'prev_page_url' => $data->previousPageUrl(),
-                'next_page_url' => $data->nextPageUrl(),
-                'last_page_url' => $data->url($data->lastPage()),
                 'has_more_pages' => $data->hasMorePages(),
+            ];
+
+            $this->links = [
+                'first' => $data->url(1),
+                'last' => $data->url($data->lastPage()),
+                'prev' => $data->previousPageUrl(),
+                'next' => $data->nextPageUrl(),
             ];
         }
 
@@ -168,7 +243,7 @@ class ApiResponse
     /**
      * Re-arrange payload.
      *
-     * @return void   
+     * @return void
      */
     private function reArrangePayload()
     {
