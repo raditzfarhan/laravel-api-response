@@ -16,7 +16,7 @@ Laravel and Lumen API response transformer/formatter.
 Via Composer
 
 ``` bash
-$ composer require raditzfarhan/laravel-api-response:^1.0
+$ composer require raditzfarhan/laravel-api-response
 ```
 
 ## Configuration
