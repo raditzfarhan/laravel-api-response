@@ -1,12 +1,11 @@
 <p align="center"><img src="https://res.cloudinary.com/raditzfarhan/image/upload/v1587107749/laravel-api-response_c1wbwr.svg" width="640"></p>
 
-<p align="center">  
+# Laravel API Response
+
 [![Latest Stable Version](https://poser.pugx.org/raditzfarhan/laravel-api-response/v/stable?format=flat-square)](https://packagist.org/packages/raditzfarhan/laravel-api-response)
 [![Total Downloads](https://img.shields.io/packagist/dt/raditzfarhan/laravel-api-response?color=red&style=flat-square)](https://packagist.org/packages/raditzfarhan/laravel-api-response)
 [![License](https://poser.pugx.org/raditzfarhan/laravel-api-response/license?format=flat-square)](https://packagist.org/packages/raditzfarhan/laravel-api-response)
 [![StyleCI](https://github.styleci.io/repos/7548986/shield?style=square)](https://github.com/raditzfarhan/laravel-api-response)
-</p>
-# Laravel API Response
 
 Laravel and Lumen API response transformer/formatter.
 
