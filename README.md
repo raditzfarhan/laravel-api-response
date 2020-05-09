@@ -1,13 +1,11 @@
 <p align="center"><img src="https://res.cloudinary.com/raditzfarhan/image/upload/v1587107749/laravel-api-response_c1wbwr.svg" width="640"></p>
 
-<p align="center">  
-    <a href="https://github.com/raditzfarhan/laravel-api-response/releases"><img src="https://img.shields.io/packagist/v/raditzfarhan/laravel-api-response?style=flat-square" alt="Latest Version"></img></a>
-     <a href="https://packagist.org/packages/raditzfarhan/laravel-api-response"><img src="https://img.shields.io/packagist/dt/raditzfarhan/laravel-api-response?color=red&style=flat-square" alt="Total Downloads"></img></a>
-    <a href="https://github.com/raditzfarhan/laravel-api-response"><img src="https://img.shields.io/badge/License-MIT-yellow.svg?style=flat-square" alt="License"></a>    
-    <a href="https://github.com/raditzfarhan/laravel-api-response"><img src="https://github.styleci.io/repos/7548986/shield?style=square" alt="styleci"></img></a>
-</p>
-
 # Laravel API Response
+
+[![Latest Stable Version](https://poser.pugx.org/raditzfarhan/laravel-api-response/v/stable?format=flat-square)](https://packagist.org/packages/raditzfarhan/laravel-api-response)
+[![Total Downloads](https://img.shields.io/packagist/dt/raditzfarhan/laravel-api-response?color=red&style=flat-square)](https://packagist.org/packages/raditzfarhan/laravel-api-response)
+[![License](https://poser.pugx.org/raditzfarhan/laravel-api-response/license?format=flat-square)](https://packagist.org/packages/raditzfarhan/laravel-api-response)
+[![StyleCI](https://github.styleci.io/repos/7548986/shield?style=square)](https://github.com/raditzfarhan/laravel-api-response)
 
 Laravel and Lumen API response transformer/formatter.
 
@@ -16,7 +14,7 @@ Laravel and Lumen API response transformer/formatter.
 Via Composer
 
 ``` bash
-$ composer require raditzfarhan/laravel-api-response:^1.0
+$ composer require raditzfarhan/laravel-api-response
 ```
 
 ## Configuration
