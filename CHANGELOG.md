@@ -2,6 +2,12 @@
 
 All notable changes to Laravel API Response will be documented in this file.
 
+## Version 1.0.3 (2020-05-09)
+
+### Changed
+- Fix bug bad request http status.
+- Update readme.
+
 ## Version 1.0.2 (2020-04-28)
 
 ### Changed
