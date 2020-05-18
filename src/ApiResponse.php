@@ -220,7 +220,7 @@ class ApiResponse
             }
 
             $this->meta = [
-                'currenct_page' => $data->currentPage(),
+                'current_page' => $data->currentPage(),
                 'last_page' => $data->lastPage(),
                 'from' => $data->firstItem(),
                 'to' => $data->lastItem(),
