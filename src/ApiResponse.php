@@ -46,7 +46,7 @@ class ApiResponse
         }
 
         if (!isset($this->payload['message'])) {
-            $this->message = 'Success.';
+            $this->message = trans('laravel-api-response::messages.success') . ".";
         }
 
         if (!isset($this->payload['errors'])) {
@@ -54,9 +54,9 @@ class ApiResponse
         }
 
         if ($this->http_code < 200 || $this->http_code >= 300) {
-            throw new BadMethodCallException(sprintf(
-                '%s HTTP Code is set to failed instead of success.',
-                $this->http_code
+            throw new BadMethodCallException(trans(
+                'laravel-api-response::messages.http_code_set_failed',
+                ['code' => $this->http_code]
             ));
         }
 
@@ -81,13 +81,13 @@ class ApiResponse
         }
 
         if (!isset($this->payload['message'])) {
-            $this->message = 'Failed.';
+            $this->message = trans('laravel-api-response::messages.failed') . ".";
         }
 
         if ($this->http_code >= 200 && $this->http_code < 300) {
-            throw new BadMethodCallException(sprintf(
-                '%s HTTP Code is set to success instead of failed.',
-                $this->http_code
+            throw new BadMethodCallException(trans(
+                'laravel-api-response::messages.http_code_set_success',
+                ['code' => $this->http_code]
             ));
         }
 
@@ -110,7 +110,7 @@ class ApiResponse
         }
 
         if (!$this->message) {
-            $this->message = 'Created.';
+            $this->message = trans('laravel-api-response::messages.created') . ".";
         }
 
         return $this->success();
@@ -123,7 +123,7 @@ class ApiResponse
      */
     public function badRequest($message = null)
     {
-        return $this->commonError(400, $message ?? $this->message ?? 'Bad request.');
+        return $this->commonError(400, $message ?? $this->message ?? trans('laravel-api-response::messages.bad_request') . ".");
     }
 
     /**
@@ -133,7 +133,7 @@ class ApiResponse
      */
     public function unauthorized($message = null)
     {
-        return $this->commonError(401, $message ?? $this->message ?? 'Unauthorized.');
+        return $this->commonError(401, $message ?? $this->message ?? trans('laravel-api-response::messages.unauthorized') . ".");
     }
 
     /**
@@ -143,7 +143,7 @@ class ApiResponse
      */
     public function forbidden($message = null)
     {
-        return $this->commonError(403, $message ?? $this->message ?? 'Forbidden.');
+        return $this->commonError(403, $message ?? $this->message ?? trans('laravel-api-response::messages.forbidden') . ".");
     }
 
     /**
@@ -153,7 +153,7 @@ class ApiResponse
      */
     public function notFound($message = null)
     {
-        return $this->commonError(404, $message ?? $this->message ?? 'Not found.');
+        return $this->commonError(404, $message ?? $this->message ?? trans('laravel-api-response::messages.not_found') . ".");
     }
 
     /**
@@ -170,7 +170,7 @@ class ApiResponse
         }
 
         if (!$this->message) {
-            $this->message = 'Validation error.';
+            $this->message = trans('laravel-api-response::messages.validation_error') . ".";
         }
 
         return $this->failed();
@@ -183,7 +183,7 @@ class ApiResponse
      */
     public function internalServerError($message = null)
     {
-        return $this->commonError(500, $message ?? $this->message ?? 'Internal Server Error.');
+        return $this->commonError(500, $message ?? $this->message ?? trans('laravel-api-response::messages.internal_server_error') . ".");
     }
 
     /**
@@ -220,7 +220,7 @@ class ApiResponse
             }
 
             $this->meta = [
-                'currenct_page' => $data->currentPage(),
+                'current_page' => $data->currentPage(),
                 'last_page' => $data->lastPage(),
                 'from' => $data->firstItem(),
                 'to' => $data->lastItem(),
@@ -302,10 +302,12 @@ class ApiResponse
 
             return $this;
         } else {
-            throw new BadMethodCallException(sprintf(
-                'Method %s::%s does not exist.',
-                get_class(),
-                $name
+            throw new BadMethodCallException(trans(
+                'laravel-api-response::messages.method_does_not_exist',
+                [
+                    'class' => get_class(),
+                    'method' => $name
+                ]
             ));
         }
     }

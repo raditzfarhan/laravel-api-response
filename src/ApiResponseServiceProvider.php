@@ -13,7 +13,11 @@ class ApiResponseServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', 'laravel-api-response');
+
+        $this->publishes([
+            __DIR__ . '/../resources/lang' => resource_path('lang/vendor/laravel-api-response'),
+        ]);
     }
 
     /**
