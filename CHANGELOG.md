@@ -2,6 +2,12 @@
 
 All notable changes to Laravel API Response will be documented in this file.
 
+## Version 1.0.4 (2021-08-19)
+
+### Added
+- Add i18n support.
+- Add en and ms translation.
+
 ## Version 1.0.3 (2020-05-09)
 
 ### Changed
