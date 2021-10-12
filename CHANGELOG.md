@@ -2,6 +2,11 @@
 
 All notable changes to Laravel API Response will be documented in this file.
 
+## Version 1.0.5 (2021-10-12)
+
+### Added
+- Add support for PHP 8.
+
 ## Version 1.0.4 (2021-08-19)
 
 ### Added
