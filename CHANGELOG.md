@@ -2,6 +2,15 @@
 
 All notable changes to Laravel API Response will be documented in this file.
 
+## Version 1.1.0 (2023-03-21)
+
+### Added
+- Add support for Laravel 9 and 10.
+- Add new shortcut methods `notImplemented`, `badGateway`, `serviceUnavailable`, `gatewayTimeout`.
+
+### Changed
+- Replace all http code to use `Response` class.
+
 ## Version 1.0.5 (2021-10-12)
 
 ### Added

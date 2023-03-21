@@ -9,6 +9,10 @@
 
 Laravel and Lumen API response transformer/formatter.
 
+## Requirements
+- PHP ^7.4 | ^8.0
+- Laravel 7, 8, 9 or 10
+
 ## Installation
 
 Via Composer
@@ -77,15 +81,17 @@ The response will return a `Illuminate\Http\Response` instance just like when u 
 > By default, success will use http **200** code if not set, and failed will use http **500** code if not set.
 
 Typical response content as follow:
+
+Success
 ```json
-// success
 {
     "status": true,
     "http_code": 200,
     "message": "Success."
 }
-
-// failed
+```
+Failed
+```json
 {
     "status": false,
     "http_code": 500,
@@ -107,8 +113,8 @@ return ApiResponse::httpCode(422)->message('Validation error!')->errors(['name' 
 return ApiResponse::validationError(['name' => ['Name field is required.']]);
 ```
 Above call will result in below:
+Example #1
 ```json
-// Example #1
 {
     "status": true,
     "http_code": 201,
@@ -118,8 +124,10 @@ Above call will result in below:
         "country": "MY"
     }    
 }
+```
+Example #2
+```json
 
-// Example #2
 {
     "status": false,
     "http_code": 422,
