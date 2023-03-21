@@ -81,15 +81,17 @@ The response will return a `Illuminate\Http\Response` instance just like when u 
 > By default, success will use http **200** code if not set, and failed will use http **500** code if not set.
 
 Typical response content as follow:
+
+Success
 ```json
-// success
 {
     "status": true,
     "http_code": 200,
     "message": "Success."
 }
-
-// failed
+```
+Failed
+```json
 {
     "status": false,
     "http_code": 500,
