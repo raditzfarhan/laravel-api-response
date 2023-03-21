@@ -5,6 +5,8 @@ namespace RaditzFarhan\ApiResponse;
 use BadMethodCallException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpFoundation\Response;
+
 
 class ApiResponse
 {
@@ -42,7 +44,7 @@ class ApiResponse
         $this->status = true;
 
         if (!isset($this->payload['http_code'])) {
-            $this->http_code = 200;
+            $this->http_code = Response::HTTP_OK;
         }
 
         if (!isset($this->payload['message'])) {
@@ -77,7 +79,7 @@ class ApiResponse
         $this->status = false;
 
         if (!isset($this->payload['http_code'])) {
-            $this->http_code = 500;
+            $this->http_code = Response::HTTP_INTERNAL_SERVER_ERROR;
         }
 
         if (!isset($this->payload['message'])) {
@@ -103,7 +105,7 @@ class ApiResponse
      */
     public function created($data = null)
     {
-        $this->http_code = 201;
+        $this->http_code = Response::HTTP_CREATED;
 
         if ($data) {
             $this->data = $data;
@@ -123,7 +125,7 @@ class ApiResponse
      */
     public function badRequest($message = null)
     {
-        return $this->commonError(400, $message ?? $this->message ?? trans('laravel-api-response::messages.bad_request') . ".");
+        return $this->commonError(Response::HTTP_BAD_REQUEST, $message ?? $this->message ?? trans('laravel-api-response::messages.bad_request') . ".");
     }
 
     /**
@@ -133,7 +135,7 @@ class ApiResponse
      */
     public function unauthorized($message = null)
     {
-        return $this->commonError(401, $message ?? $this->message ?? trans('laravel-api-response::messages.unauthorized') . ".");
+        return $this->commonError(Response::HTTP_UNAUTHORIZED, $message ?? $this->message ?? trans('laravel-api-response::messages.unauthorized') . ".");
     }
 
     /**
@@ -143,7 +145,7 @@ class ApiResponse
      */
     public function forbidden($message = null)
     {
-        return $this->commonError(403, $message ?? $this->message ?? trans('laravel-api-response::messages.forbidden') . ".");
+        return $this->commonError(Response::HTTP_FORBIDDEN, $message ?? $this->message ?? trans('laravel-api-response::messages.forbidden') . ".");
     }
 
     /**
@@ -153,7 +155,7 @@ class ApiResponse
      */
     public function notFound($message = null)
     {
-        return $this->commonError(404, $message ?? $this->message ?? trans('laravel-api-response::messages.not_found') . ".");
+        return $this->commonError(Response::HTTP_NOT_FOUND, $message ?? $this->message ?? trans('laravel-api-response::messages.not_found') . ".");
     }
 
     /**
@@ -163,7 +165,7 @@ class ApiResponse
      */
     public function validationError($errors = null)
     {
-        $this->http_code = 422;
+        $this->http_code = Response::HTTP_UNPROCESSABLE_ENTITY;
 
         if ($errors) {
             $this->errors = $errors;
@@ -183,7 +185,47 @@ class ApiResponse
      */
     public function internalServerError($message = null)
     {
-        return $this->commonError(500, $message ?? $this->message ?? trans('laravel-api-response::messages.internal_server_error') . ".");
+        return $this->commonError(Response::HTTP_INTERNAL_SERVER_ERROR, $message ?? $this->message ?? trans('laravel-api-response::messages.internal_server_error') . ".");
+    }
+
+    /**
+     * Return not implemented json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function notImplemented($message = null)
+    {
+        return $this->commonError(Response::HTTP_NOT_IMPLEMENTED, $message ?? $this->message ?? trans('laravel-api-response::messages.not_implemented') . ".");
+    }
+
+    /**
+     * Return bad gateway json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function badGateway($message = null)
+    {
+        return $this->commonError(Response::HTTP_BAD_GATEWAY, $message ?? $this->message ?? trans('laravel-api-response::messages.bad_gateway') . ".");
+    }
+
+    /**
+     * Return service unavailable json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function serviceUnavailable($message = null)
+    {
+        return $this->commonError(Response::HTTP_SERVICE_UNAVAILABLE, $message ?? $this->message ?? trans('laravel-api-response::messages.service_unavailable') . ".");
+    }
+
+    /**
+     * Return gateway timeout json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function gatewayTimeout($message = null)
+    {
+        return $this->commonError(Response::HTTP_GATEWAY_TIMEOUT, $message ?? $this->message ?? trans('laravel-api-response::messages.gateway_timeout') . ".");
     }
 
     /**

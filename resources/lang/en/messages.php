@@ -12,4 +12,8 @@ return [
     "success" => "Success",
     "unauthorized" => "Unauthorized",
     "validation_error" => "Validation error",
+    "not_implemented" => "Not Implemented",
+    "bad_gateway" => "Bad gateway",
+    "service_unavailable" => "Service unavailable",
+    "gateway_timeout" => "Gateway timeout",
 ];

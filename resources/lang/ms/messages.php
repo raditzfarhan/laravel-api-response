@@ -12,4 +12,8 @@ return [
     "success" => "Berjaya",
     "unauthorized" => "Tiada Kebenaran",
     "validation_error" => "Isu Pengesahan",
+    "not_implemented" => "Tidak dilaksanakan",
+    "bad_gateway" => "Gerbang tidak betul",
+    "service_unavailable" => "Servis tiada dalam perkhidmatan",
+    "gateway_timeout" => "Garbang masa tamat",
 ];

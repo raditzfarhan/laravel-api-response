@@ -107,8 +107,8 @@ return ApiResponse::httpCode(422)->message('Validation error!')->errors(['name' 
 return ApiResponse::validationError(['name' => ['Name field is required.']]);
 ```
 Above call will result in below:
+Example #1
 ```json
-// Example #1
 {
     "status": true,
     "http_code": 201,
@@ -118,8 +118,10 @@ Above call will result in below:
         "country": "MY"
     }    
 }
+```
+Example #2
+```json
 
-// Example #2
 {
     "status": false,
     "http_code": 422,
