@@ -11,6 +11,9 @@ All notable changes to Laravel API Response will be documented in this file.
 ### Changed
 - Replace all http code to use `Response` class.
 
+### Removed
+- Drop support for Laravel 6.
+
 ## Version 1.0.5 (2021-10-12)
 
 ### Added

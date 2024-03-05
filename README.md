@@ -113,6 +113,7 @@ return ApiResponse::httpCode(422)->message('Validation error!')->errors(['name' 
 return ApiResponse::validationError(['name' => ['Name field is required.']]);
 ```
 Above call will result in below:
+
 Example #1
 ```json
 {
