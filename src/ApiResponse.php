@@ -30,6 +30,7 @@ class ApiResponse
         'errors',
         'meta',
         'links',
+        'code',
     ];
 
     /**
