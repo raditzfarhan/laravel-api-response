@@ -28,7 +28,7 @@ class ApiResponseServiceProvider extends ServiceProvider
     public function register()
     {
         // Register the service the package provides.
-        $this->app->singleton('ApiResponse', function ($app) {
+        $this->app->bind('ApiResponse', function ($app) {
             return new ApiResponse;
         });
     }
