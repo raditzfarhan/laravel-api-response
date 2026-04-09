@@ -18,6 +18,11 @@ All notable changes to Laravel API Response will be documented in this file.
 ### Changed
 - Replace `krsort`-based payload ordering with an explicit `$attributeOrder` array for predictable key order.
 
+## Version 1.2.0 (2024-03-05)
+
+### Added
+- Add support for Laravel 11.
+
 ## Version 1.1.0 (2023-03-21)
 
 ### Added
