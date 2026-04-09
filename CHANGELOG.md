@@ -2,6 +2,32 @@
 
 All notable changes to Laravel API Response will be documented in this file.
 
+## Version 1.3.0 (2026-04-09)
+
+### Added
+- Add support for Laravel 12 and 13.
+- Add publishable config file for global key renaming and global response fields.
+- Add `code` attribute for application-level error/status codes.
+- Add `headers()` method for custom HTTP response headers.
+- Add shorthand methods: `methodNotAllowed`, `notAcceptable`, `requestTimeout`, `conflict`, `gone`, `tooManyRequests`.
+- Add PHPDoc `@method` annotations to `ApiResponse` class and facade for IDE autocomplete.
+- Add test suite using Orchestra Testbench.
+
+### Fixed
+- Fix singleton state leak: `ApiResponse` is now resolved via `bind` instead of `singleton`, preventing stale payload across requests in long-lived processes.
+
+### Changed
+- Replace `krsort`-based payload ordering with an explicit `$attributeOrder` array for predictable key order.
+
+### Removed
+- Drop support for Laravel 7 and 8.
+- Drop support for PHP 7.4.
+
+## Version 1.2.0 (2024-03-05)
+
+### Added
+- Add support for Laravel 11.
+
 ## Version 1.1.0 (2023-03-21)
 
 ### Added

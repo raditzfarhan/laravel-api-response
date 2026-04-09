@@ -7,82 +7,36 @@
 [![License](https://poser.pugx.org/raditzfarhan/laravel-api-response/license?format=flat-square)](https://packagist.org/packages/raditzfarhan/laravel-api-response)
 [![StyleCI](https://github.styleci.io/repos/7548986/shield?style=square)](https://github.com/raditzfarhan/laravel-api-response)
 
-Laravel and Lumen API response transformer/formatter.
+A fluent API response formatter for Laravel. Returns consistent JSON responses across your application with minimal boilerplate.
 
 ## Requirements
-- PHP ^7.4 | ^8.0
-- Laravel 7, 8, 9 or 10
+
+- PHP ^8.0
+- Laravel 9, 10, 11, 12 or 13
 
 ## Installation
 
-Via Composer
-
-``` bash
-$ composer require raditzfarhan/laravel-api-response
+```bash
+composer require raditzfarhan/laravel-api-response
 ```
 
-## Configuration
+The service provider is auto-discovered. No manual registration needed.
 
-The Laravel and Lumen configurations vary slightly, so here are the instructions for each of the frameworks.
-
-### Laravel
-
-Edit the `config/app.php` file and add the following line to register the service provider:
+## Basic Usage
 
 ```php
-'providers' => [
-    ...
-    RaditzFarhan\ApiResponse\ApiResponseServiceProvider::class,
-    ...
-],
+use ApiResponse;
+
+// Success (HTTP 200)
+return ApiResponse::success();
+
+// Failed (HTTP 500)
+return ApiResponse::failed();
 ```
 
-> Tip: If you're on Laravel version **5.5** or higher, you can skip this part of the setup in favour of the Auto-Discovery feature.
+Both methods return an `Illuminate\Http\JsonResponse` instance.
 
-### Lumen
-
-Edit the `bootstrap/app.php` file and add the following line to register the service provider:
-
-```php
-...
-$app->register(RaditzFarhan\ApiResponse\ApiResponseServiceProvider::class);
-...
-```
-
-You will also need to enable `Facades`  in `bootstrap/app.php`:
-
-```php
-..
-$app->withFacades(true, [
-    RaditzFarhan\ApiResponse\Facades\ApiResponse::class => 'ApiResponse'
-]);
-...
-```
-
-## Usage
-
-Example usage as below snippet:
-
-```php
-// Success response
-
-// using service container
-$response = app('ApiResponse')->success();
-
-// using alias
-$response = \ApiResponse::success();
-
-// Failed response
-$response = \ApiResponse::failed();
-
-```
-The response will return a `Illuminate\Http\Response` instance just like when u call `response()` helper method.
-
-> By default, success will use http **200** code if not set, and failed will use http **500** code if not set.
-
-Typical response content as follow:
-
-Success
+**Success response:**
 ```json
 {
     "status": true,
@@ -90,7 +44,8 @@ Success
     "message": "Success."
 }
 ```
-Failed
+
+**Failed response:**
 ```json
 {
     "status": false,
@@ -98,110 +53,209 @@ Failed
     "message": "Failed."
 }
 ```
-Add/Change payload data by chaining more methods as below:
+
+## Chaining
+
+Build your response by chaining any combination of these methods before calling `success()` or `failed()`:
+
+| Method | Description |
+|---|---|
+| `httpCode(int $code)` | Set the HTTP status code |
+| `message(string $message)` | Set the response message |
+| `data(mixed $data)` | Set the response data |
+| `errors(array $errors)` | Set validation/error details |
+| `meta(array $meta)` | Set metadata |
+| `links(array $links)` | Set pagination links |
+| `code(int\|string $code)` | Set an application-level error/status code |
+| `headers(array $headers)` | Set custom HTTP response headers |
+
 ```php
-// Example #1
-return ApiResponse::httpCode(201)->message('Created new record!')->data(['name' => 'Raditz Farhan', 'country' => 'MY'])->success();
-
-// or can be shorten to
-return ApiResponse::created(['name' => 'Raditz Farhan', 'country' => 'MY']);
-
-// Example #2
-return ApiResponse::httpCode(422)->message('Validation error!')->errors(['name' => ['Name field is required.']])->failed();
-
-// or can be shorten to
-return ApiResponse::validationError(['name' => ['Name field is required.']]);
+return ApiResponse::httpCode(201)
+    ->message('User created successfully.')
+    ->data(['id' => 1, 'name' => 'Raditz Farhan'])
+    ->success();
 ```
-Above call will result in below:
 
-Example #1
 ```json
 {
     "status": true,
     "http_code": 201,
-    "message": "Created new record!",
+    "message": "User created successfully.",
     "data": {
-        "name": "Raditz Farhan",
-        "country": "MY"
-    }    
+        "id": 1,
+        "name": "Raditz Farhan"
+    }
 }
 ```
-Example #2
-```json
 
+## Application-Level Error Codes
+
+Use `code()` to attach an application-specific error or status code alongside the HTTP status code:
+
+```php
+return ApiResponse::code(40401)->notFound();
+```
+
+```json
+{
+    "status": false,
+    "http_code": 404,
+    "code": 40401,
+    "message": "Not found."
+}
+```
+
+The `code` field only appears when set. Manage your own code definitions using constants or enums in your application.
+
+## Custom HTTP Headers
+
+Use `headers()` to attach custom HTTP response headers. Headers are sent with the response but never appear in the JSON body:
+
+```php
+return ApiResponse::headers([
+    'X-Request-Id' => (string) Str::uuid(),
+    'X-Version'    => '1.0',
+])->success();
+```
+
+## Shorthand Methods
+
+Common HTTP responses have dedicated shorthand methods. All accept an optional `$message` parameter:
+
+```php
+// 2xx
+return ApiResponse::created($data);         // 201
+return ApiResponse::collection($paginator); // 200 with meta & links
+
+// 4xx
+return ApiResponse::badRequest();           // 400
+return ApiResponse::unauthorized();         // 401
+return ApiResponse::forbidden();            // 403
+return ApiResponse::notFound();             // 404
+return ApiResponse::methodNotAllowed();     // 405
+return ApiResponse::notAcceptable();        // 406
+return ApiResponse::requestTimeout();       // 408
+return ApiResponse::conflict();             // 409
+return ApiResponse::gone();                 // 410
+return ApiResponse::validationError();      // 422
+return ApiResponse::tooManyRequests();      // 429
+
+// 5xx
+return ApiResponse::internalServerError();  // 500
+return ApiResponse::notImplemented();       // 501
+return ApiResponse::badGateway();           // 502
+return ApiResponse::serviceUnavailable();   // 503
+return ApiResponse::gatewayTimeout();       // 504
+```
+
+Pass a custom message to any of them:
+
+```php
+return ApiResponse::conflict('A record with this email already exists.');
+```
+
+### Validation Errors
+
+```php
+return ApiResponse::validationError($validator->errors()->toArray());
+```
+
+```json
 {
     "status": false,
     "http_code": 422,
-    "message": "Validation error!",
+    "message": "Validation error.",
     "errors": {
-        "name": [
-            "Name field is required."
-        ]
-    },
+        "email": ["The email field is required."]
+    }
 }
 ```
 
-Use `collection` method to return paginate result that includes `meta` and `links` attribute:
+### Paginated Collections
+
+Pass a `LengthAwarePaginator` or `AnonymousResourceCollection` to `collection()`:
 
 ```php
-return ApiResponse::collection(App\Post::paginate());
+return ApiResponse::collection(Post::paginate(25));
 ```
-
-Will return below result:
 
 ```json
 {
-  "status": true,
-  "http_code": 200,
-  "message": "Success.",
-  "data": [
-    {
-      "id": 1,
-      "title": "First post",
-      "slug": "first-post",
-      "content": "This is the first post",
-      "sort_order": 1,
-      "created_at": "2020-04-21T13:40:45.000000Z",
-      "updated_at": "2020-04-21T13:40:45.000000Z"
+    "status": true,
+    "http_code": 200,
+    "message": "Success.",
+    "data": [ ... ],
+    "meta": {
+        "current_page": 1,
+        "last_page": 3,
+        "from": 1,
+        "to": 25,
+        "per_page": 25,
+        "total": 60,
+        "has_more_pages": true
     },
-    ...
-  ],
-  "meta": {
-    "currenct_page": 1,
-    "last_page": 3,
-    "from": 1,
-    "to": 25,
-    "per_page": 25,
-    "total": 60,
-    "has_more_pages": true
-  },
-  "links": {
-    "first": "http://your-app-url?page=1",
-    "last": "http://your-app-url?page=3",
-    "prev": null,
-    "next": "http://your-app-url?page=2"
-  }
+    "links": {
+        "first": "https://example.com/posts?page=1",
+        "last": "https://example.com/posts?page=3",
+        "prev": null,
+        "next": "https://example.com/posts?page=2"
+    }
 }
 ```
 
-Besides `created` and `validationError`, below shorthand methods are available for your convenience:
-```php
-// return http 400 Bad request error.
-return ApiResponse::badRequest('Optional message here'); 
+## Configuration
 
-// return http 401 Unauthorized error.
-return ApiResponse::unauthorized(); 
+Publish the config file to customise key names and add global fields:
 
-// return http 403 Forbidden error.
-return ApiResponse::forbidden(); 
-
-// return http 404 Not found error.
-return ApiResponse::notFound(); 
-
-// return http 500 Internal server error.
-return ApiResponse::internalServerError(); 
+```bash
+php artisan vendor:publish --provider="RaditzFarhan\ApiResponse\ApiResponseServiceProvider"
 ```
-> Tip: Pass a message to the method to put your own custom message.
+
+This creates `config/laravel-api-response.php`.
+
+### Rename Response Keys
+
+Rename any of the default JSON keys globally without changing your application code:
+
+```php
+'keys' => [
+    'status'    => 'success',   // "status" → "success"
+    'http_code' => 'code',      // "http_code" → "code"
+    'message'   => 'message',
+    'data'      => 'data',
+    'errors'    => 'errors',
+    'meta'      => 'meta',
+    'links'     => 'links',
+    'code'      => 'error_code',
+],
+```
+
+### Global Fields
+
+Append fields to every response automatically. Supports static values and closures:
+
+```php
+'global_fields' => [
+    'version'    => '1.0',
+    'request_id' => fn() => request()->header('X-Request-Id'),
+],
+```
+
+Every response will then include:
+
+```json
+{
+    "status": true,
+    "http_code": 200,
+    "message": "Success.",
+    "version": "1.0",
+    "request_id": "abc-123"
+}
+```
+
+## IDE Support
+
+All chainable and shorthand methods are annotated with `@method` PHPDoc on both the `ApiResponse` class and the facade, giving full autocomplete in PhpStorm, VS Code, and other IDEs.
 
 ## Change log
 

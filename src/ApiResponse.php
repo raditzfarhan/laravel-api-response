@@ -8,6 +8,36 @@ use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 
+/**
+ * @method static static httpCode(int $code)
+ * @method static static message(string $message)
+ * @method static static data(mixed $data)
+ * @method static static errors(array $errors)
+ * @method static static meta(array $meta)
+ * @method static static links(array $links)
+ * @method static static code(int|string $code)
+ * @method static static headers(array $headers)
+ * @method static \Illuminate\Http\JsonResponse success()
+ * @method static \Illuminate\Http\JsonResponse failed()
+ * @method static \Illuminate\Http\JsonResponse created(mixed $data = null)
+ * @method static \Illuminate\Http\JsonResponse collection(mixed $data)
+ * @method static \Illuminate\Http\JsonResponse badRequest(?string $message = null)
+ * @method static \Illuminate\Http\JsonResponse unauthorized(?string $message = null)
+ * @method static \Illuminate\Http\JsonResponse forbidden(?string $message = null)
+ * @method static \Illuminate\Http\JsonResponse notFound(?string $message = null)
+ * @method static \Illuminate\Http\JsonResponse methodNotAllowed(?string $message = null)
+ * @method static \Illuminate\Http\JsonResponse notAcceptable(?string $message = null)
+ * @method static \Illuminate\Http\JsonResponse requestTimeout(?string $message = null)
+ * @method static \Illuminate\Http\JsonResponse conflict(?string $message = null)
+ * @method static \Illuminate\Http\JsonResponse gone(?string $message = null)
+ * @method static \Illuminate\Http\JsonResponse validationError(?array $errors = null)
+ * @method static \Illuminate\Http\JsonResponse tooManyRequests(?string $message = null)
+ * @method static \Illuminate\Http\JsonResponse internalServerError(?string $message = null)
+ * @method static \Illuminate\Http\JsonResponse notImplemented(?string $message = null)
+ * @method static \Illuminate\Http\JsonResponse badGateway(?string $message = null)
+ * @method static \Illuminate\Http\JsonResponse serviceUnavailable(?string $message = null)
+ * @method static \Illuminate\Http\JsonResponse gatewayTimeout(?string $message = null)
+ */
 class ApiResponse
 {
     /**
@@ -30,7 +60,69 @@ class ApiResponse
         'errors',
         'meta',
         'links',
+        'code',
     ];
+
+    /**
+     * The canonical output order for payload keys.
+     *
+     * @var array
+     */
+    public $attributeOrder = [
+        'status',
+        'http_code',
+        'code',
+        'message',
+        'data',
+        'errors',
+        'meta',
+        'links',
+    ];
+
+    /**
+     * Map of internal key names to output key names.
+     *
+     * @var array
+     */
+    private array $keyMap = [];
+
+    /**
+     * Fields to inject into every response.
+     *
+     * @var array
+     */
+    private array $globalFields = [];
+
+    /**
+     * HTTP headers to send with the response.
+     *
+     * @var array
+     */
+    private array $headers = [];
+
+    /**
+     * Set custom HTTP headers to send with the response.
+     *
+     * @param  array  $headers
+     * @return static
+     */
+    public function headers(array $headers): static
+    {
+        $this->headers = $headers;
+        return $this;
+    }
+
+    /**
+     * Configure the response with package config values.
+     *
+     * @param  array  $config
+     * @return void
+     */
+    public function configure(array $config): void
+    {
+        $this->keyMap = $config['keys'] ?? [];
+        $this->globalFields = $config['global_fields'] ?? [];
+    }
 
     /**
      * Return success json response.
@@ -62,9 +154,10 @@ class ApiResponse
             ));
         }
 
+        $httpCode = $this->http_code;
         $this->reArrangePayload();
 
-        return response()->json($this->payload, $this->http_code);
+        return response()->json($this->payload, $httpCode, $this->headers);
     }
 
     /**
@@ -93,9 +186,10 @@ class ApiResponse
             ));
         }
 
+        $httpCode = $this->http_code;
         $this->reArrangePayload();
 
-        return response()->json($this->payload, $this->http_code);
+        return response()->json($this->payload, $httpCode, $this->headers);
     }
 
     /**
@@ -229,6 +323,66 @@ class ApiResponse
     }
 
     /**
+     * Return method not allowed json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function methodNotAllowed($message = null)
+    {
+        return $this->commonError(Response::HTTP_METHOD_NOT_ALLOWED, $message ?? $this->message ?? trans('laravel-api-response::messages.method_not_allowed') . ".");
+    }
+
+    /**
+     * Return not acceptable json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function notAcceptable($message = null)
+    {
+        return $this->commonError(Response::HTTP_NOT_ACCEPTABLE, $message ?? $this->message ?? trans('laravel-api-response::messages.not_acceptable') . ".");
+    }
+
+    /**
+     * Return request timeout json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function requestTimeout($message = null)
+    {
+        return $this->commonError(Response::HTTP_REQUEST_TIMEOUT, $message ?? $this->message ?? trans('laravel-api-response::messages.request_timeout') . ".");
+    }
+
+    /**
+     * Return conflict json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function conflict($message = null)
+    {
+        return $this->commonError(Response::HTTP_CONFLICT, $message ?? $this->message ?? trans('laravel-api-response::messages.conflict') . ".");
+    }
+
+    /**
+     * Return gone json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function gone($message = null)
+    {
+        return $this->commonError(Response::HTTP_GONE, $message ?? $this->message ?? trans('laravel-api-response::messages.gone') . ".");
+    }
+
+    /**
+     * Return too many requests json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function tooManyRequests($message = null)
+    {
+        return $this->commonError(Response::HTTP_TOO_MANY_REQUESTS, $message ?? $this->message ?? trans('laravel-api-response::messages.too_many_requests') . ".");
+    }
+
+    /**
      * Return common error json response.
      *
      * @return Illuminate\Http\Response
@@ -289,14 +443,33 @@ class ApiResponse
      */
     private function reArrangePayload()
     {
-        $attributes = $this->attributes;
-        krsort($attributes);
-
-        foreach ($attributes as $attr) {
-            if (isset($this->payload[$attr])) {
-                $this->payload = Arr::prepend($this->payload, $this->$attr, $attr);
+        // 1. Order by attributeOrder
+        $ordered = [];
+        foreach ($this->attributeOrder as $key) {
+            if (array_key_exists($key, $this->payload)) {
+                $ordered[$key] = $this->payload[$key];
             }
         }
+        // Preserve any keys not in attributeOrder (e.g. future additions)
+        foreach ($this->payload as $key => $value) {
+            if (!array_key_exists($key, $ordered)) {
+                $ordered[$key] = $value;
+            }
+        }
+
+        // 2. Rename keys via keyMap
+        $renamed = [];
+        foreach ($ordered as $key => $value) {
+            $outputKey = $this->keyMap[$key] ?? $key;
+            $renamed[$outputKey] = $value;
+        }
+
+        // 3. Inject global fields (after standard fields, not subject to renaming)
+        foreach ($this->globalFields as $key => $value) {
+            $renamed[$key] = is_callable($value) ? $value() : $value;
+        }
+
+        $this->payload = $renamed;
     }
 
     /**

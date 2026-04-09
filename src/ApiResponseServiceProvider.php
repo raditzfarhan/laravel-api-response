@@ -17,6 +17,7 @@ class ApiResponseServiceProvider extends ServiceProvider
 
         $this->publishes([
             __DIR__ . '/../resources/lang' => resource_path('lang/vendor/laravel-api-response'),
+            __DIR__ . '/../config/laravel-api-response.php' => config_path('laravel-api-response.php'),
         ]);
     }
 
@@ -27,9 +28,12 @@ class ApiResponseServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Register the service the package provides.
-        $this->app->singleton('ApiResponse', function ($app) {
-            return new ApiResponse;
+        $this->mergeConfigFrom(__DIR__ . '/../config/laravel-api-response.php', 'laravel-api-response');
+
+        $this->app->bind('ApiResponse', function ($app) {
+            $instance = new ApiResponse;
+            $instance->configure(config('laravel-api-response', []));
+            return $instance;
         });
     }
 

@@ -1,12 +1,16 @@
 {
 	"name": "raditzfarhan/laravel-api-response",
-	"description": "Laravel and Lumen API response transformer",
+	"description": "Laravel API response formatter",
 	"type": "laravel-package",
-	"keywords": [ "laravel", "lumen", "api", "response", "transformer", "responder" ],
+	"keywords": [ "laravel", "api", "response", "formatter", "transformer" ],
 	"require": {
-		"php": "^7.4|^8.0",
-		"illuminate/support": "^7.0|^8.0|^9.0|^10.0|^11.0",
-		"illuminate/http": "^7.0|^8.0|^9.0|^10.0|^11.0"
+		"php": "^8.0",
+		"illuminate/support": "^9.0|^10.0|^11.0|^12.0|^13.0",
+		"illuminate/http": "^9.0|^10.0|^11.0|^12.0|^13.0"
+	},
+	"require-dev": {
+		"orchestra/testbench": "^5.0|^6.0|^7.0|^8.0|^9.0",
+		"phpunit/phpunit": "^9.0|^10.0|^11.0"
 	},
 	"license": "MIT",
 	"authors": [
@@ -20,6 +24,14 @@
 		"psr-4": {
 			"RaditzFarhan\\ApiResponse\\": "src/"
 		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"RaditzFarhan\\ApiResponse\\Tests\\": "tests/"
+		}
+	},
+	"scripts": {
+		"test": "vendor/bin/phpunit"
 	},
 	"extra": {
 		"laravel": {
