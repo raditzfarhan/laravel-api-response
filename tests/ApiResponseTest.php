@@ -37,6 +37,53 @@ class ApiResponseTest extends TestCase
         $this->assertSame(['status', 'http_code', 'message', 'data'], $keys);
     }
 
+    public function test_response_keys_can_be_renamed_via_config()
+    {
+        config(['laravel-api-response.keys.status' => 'success']);
+        config(['laravel-api-response.keys.http_code' => 'code']);
+
+        $result = \ApiResponse::success();
+        $data = $result->getData(true);
+
+        $this->assertArrayHasKey('success', $data);
+        $this->assertArrayHasKey('code', $data);
+        $this->assertArrayNotHasKey('status', $data);
+        $this->assertArrayNotHasKey('http_code', $data);
+    }
+
+    public function test_global_fields_appear_in_every_response()
+    {
+        config(['laravel-api-response.global_fields' => ['version' => '1.0']]);
+
+        $result = \ApiResponse::success();
+        $data = $result->getData(true);
+
+        $this->assertArrayHasKey('version', $data);
+        $this->assertSame('1.0', $data['version']);
+    }
+
+    public function test_global_fields_support_closures()
+    {
+        config(['laravel-api-response.global_fields' => [
+            'env' => fn() => 'testing',
+        ]]);
+
+        $result = \ApiResponse::success();
+        $data = $result->getData(true);
+
+        $this->assertSame('testing', $data['env']);
+    }
+
+    public function test_global_fields_appear_after_standard_fields()
+    {
+        config(['laravel-api-response.global_fields' => ['version' => '1.0']]);
+
+        $result = \ApiResponse::success();
+        $keys = array_keys($result->getData(true));
+
+        $this->assertGreaterThan(array_search('message', $keys), array_search('version', $keys));
+    }
+
     public function test_each_resolution_returns_a_fresh_instance()
     {
         $instance1 = app('ApiResponse');

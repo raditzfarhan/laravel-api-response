@@ -50,6 +50,32 @@ class ApiResponse
     ];
 
     /**
+     * Map of internal key names to output key names.
+     *
+     * @var array
+     */
+    private array $keyMap = [];
+
+    /**
+     * Fields to inject into every response.
+     *
+     * @var array
+     */
+    private array $globalFields = [];
+
+    /**
+     * Configure the response with package config values.
+     *
+     * @param  array  $config
+     * @return void
+     */
+    public function configure(array $config): void
+    {
+        $this->keyMap = $config['keys'] ?? [];
+        $this->globalFields = $config['global_fields'] ?? [];
+    }
+
+    /**
      * Return success json response.
      *
      * @return Illuminate\Http\Response
@@ -79,9 +105,10 @@ class ApiResponse
             ));
         }
 
+        $httpCode = $this->http_code;
         $this->reArrangePayload();
 
-        return response()->json($this->payload, $this->http_code);
+        return response()->json($this->payload, $httpCode);
     }
 
     /**
@@ -110,9 +137,10 @@ class ApiResponse
             ));
         }
 
+        $httpCode = $this->http_code;
         $this->reArrangePayload();
 
-        return response()->json($this->payload, $this->http_code);
+        return response()->json($this->payload, $httpCode);
     }
 
     /**
@@ -320,7 +348,19 @@ class ApiResponse
             }
         }
 
-        $this->payload = $ordered;
+        // 2. Rename keys via keyMap
+        $renamed = [];
+        foreach ($ordered as $key => $value) {
+            $outputKey = $this->keyMap[$key] ?? $key;
+            $renamed[$outputKey] = $value;
+        }
+
+        // 3. Inject global fields (after standard fields, not subject to renaming)
+        foreach ($this->globalFields as $key => $value) {
+            $renamed[$key] = is_callable($value) ? $value() : $value;
+        }
+
+        $this->payload = $renamed;
     }
 
     /**
