@@ -16,4 +16,10 @@ return [
     "bad_gateway" => "Gerbang tidak betul",
     "service_unavailable" => "Servis tiada dalam perkhidmatan",
     "gateway_timeout" => "Garbang masa tamat",
+    "conflict" => "Konflik",
+    "gone" => "Tiada",
+    "method_not_allowed" => "Kaedah tidak dibenarkan",
+    "not_acceptable" => "Tidak boleh diterima",
+    "request_timeout" => "Masa permintaan tamat",
+    "too_many_requests" => "Terlalu banyak permintaan",
 ];

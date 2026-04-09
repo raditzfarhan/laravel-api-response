@@ -107,6 +107,33 @@ class ApiResponseTest extends TestCase
         $this->assertSame('value', $result->headers->get('X-Custom'));
     }
 
+    /** @dataProvider shorthandMethodProvider */
+    public function test_shorthand_methods_return_correct_http_code(string $method, int $expectedCode)
+    {
+        $result = \ApiResponse::$method();
+        $this->assertSame($expectedCode, $result->getStatusCode());
+        $this->assertSame($expectedCode, $result->getData(true)['http_code']);
+        $this->assertFalse($result->getData(true)['status']);
+    }
+
+    public static function shorthandMethodProvider(): array
+    {
+        return [
+            'methodNotAllowed'  => ['methodNotAllowed', 405],
+            'notAcceptable'     => ['notAcceptable', 406],
+            'requestTimeout'    => ['requestTimeout', 408],
+            'conflict'          => ['conflict', 409],
+            'gone'              => ['gone', 410],
+            'tooManyRequests'   => ['tooManyRequests', 429],
+        ];
+    }
+
+    public function test_shorthand_methods_accept_custom_message()
+    {
+        $result = \ApiResponse::conflict('Resource already exists.');
+        $this->assertSame('Resource already exists.', $result->getData(true)['message']);
+    }
+
     public function test_each_resolution_returns_a_fresh_instance()
     {
         $instance1 = app('ApiResponse');

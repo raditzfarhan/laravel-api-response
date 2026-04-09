@@ -16,4 +16,10 @@ return [
     "bad_gateway" => "Bad gateway",
     "service_unavailable" => "Service unavailable",
     "gateway_timeout" => "Gateway timeout",
+    "conflict" => "Conflict",
+    "gone" => "Gone",
+    "method_not_allowed" => "Method not allowed",
+    "not_acceptable" => "Not acceptable",
+    "request_timeout" => "Request timeout",
+    "too_many_requests" => "Too many requests",
 ];

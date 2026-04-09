@@ -293,6 +293,66 @@ class ApiResponse
     }
 
     /**
+     * Return method not allowed json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function methodNotAllowed($message = null)
+    {
+        return $this->commonError(Response::HTTP_METHOD_NOT_ALLOWED, $message ?? $this->message ?? trans('laravel-api-response::messages.method_not_allowed') . ".");
+    }
+
+    /**
+     * Return not acceptable json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function notAcceptable($message = null)
+    {
+        return $this->commonError(Response::HTTP_NOT_ACCEPTABLE, $message ?? $this->message ?? trans('laravel-api-response::messages.not_acceptable') . ".");
+    }
+
+    /**
+     * Return request timeout json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function requestTimeout($message = null)
+    {
+        return $this->commonError(Response::HTTP_REQUEST_TIMEOUT, $message ?? $this->message ?? trans('laravel-api-response::messages.request_timeout') . ".");
+    }
+
+    /**
+     * Return conflict json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function conflict($message = null)
+    {
+        return $this->commonError(Response::HTTP_CONFLICT, $message ?? $this->message ?? trans('laravel-api-response::messages.conflict') . ".");
+    }
+
+    /**
+     * Return gone json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function gone($message = null)
+    {
+        return $this->commonError(Response::HTTP_GONE, $message ?? $this->message ?? trans('laravel-api-response::messages.gone') . ".");
+    }
+
+    /**
+     * Return too many requests json response.
+     *
+     * @return Illuminate\Http\Response
+     */
+    public function tooManyRequests($message = null)
+    {
+        return $this->commonError(Response::HTTP_TOO_MANY_REQUESTS, $message ?? $this->message ?? trans('laravel-api-response::messages.too_many_requests') . ".");
+    }
+
+    /**
      * Return common error json response.
      *
      * @return Illuminate\Http\Response
