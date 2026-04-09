@@ -2,7 +2,7 @@
 
 All notable changes to Laravel API Response will be documented in this file.
 
-## Version 1.2.0 (2026-04-09)
+## Version 1.3.0 (2026-04-09)
 
 ### Added
 - Add publishable config file for global key renaming and global response fields.
