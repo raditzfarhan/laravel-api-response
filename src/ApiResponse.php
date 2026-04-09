@@ -33,6 +33,22 @@ class ApiResponse
     ];
 
     /**
+     * The canonical output order for payload keys.
+     *
+     * @var array
+     */
+    public $attributeOrder = [
+        'status',
+        'http_code',
+        'code',
+        'message',
+        'data',
+        'errors',
+        'meta',
+        'links',
+    ];
+
+    /**
      * Return success json response.
      *
      * @return Illuminate\Http\Response
@@ -289,14 +305,21 @@ class ApiResponse
      */
     private function reArrangePayload()
     {
-        $attributes = $this->attributes;
-        krsort($attributes);
-
-        foreach ($attributes as $attr) {
-            if (isset($this->payload[$attr])) {
-                $this->payload = Arr::prepend($this->payload, $this->$attr, $attr);
+        // 1. Order by attributeOrder
+        $ordered = [];
+        foreach ($this->attributeOrder as $key) {
+            if (array_key_exists($key, $this->payload)) {
+                $ordered[$key] = $this->payload[$key];
             }
         }
+        // Preserve any keys not in attributeOrder (e.g. future additions)
+        foreach ($this->payload as $key => $value) {
+            if (!array_key_exists($key, $ordered)) {
+                $ordered[$key] = $value;
+            }
+        }
+
+        $this->payload = $ordered;
     }
 
     /**
