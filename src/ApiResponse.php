@@ -64,6 +64,25 @@ class ApiResponse
     private array $globalFields = [];
 
     /**
+     * HTTP headers to send with the response.
+     *
+     * @var array
+     */
+    private array $headers = [];
+
+    /**
+     * Set custom HTTP headers to send with the response.
+     *
+     * @param  array  $headers
+     * @return static
+     */
+    public function headers(array $headers): static
+    {
+        $this->headers = $headers;
+        return $this;
+    }
+
+    /**
      * Configure the response with package config values.
      *
      * @param  array  $config
@@ -108,7 +127,7 @@ class ApiResponse
         $httpCode = $this->http_code;
         $this->reArrangePayload();
 
-        return response()->json($this->payload, $httpCode);
+        return response()->json($this->payload, $httpCode, $this->headers);
     }
 
     /**
@@ -140,7 +159,7 @@ class ApiResponse
         $httpCode = $this->http_code;
         $this->reArrangePayload();
 
-        return response()->json($this->payload, $httpCode);
+        return response()->json($this->payload, $httpCode, $this->headers);
     }
 
     /**

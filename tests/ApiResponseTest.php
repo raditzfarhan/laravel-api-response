@@ -84,6 +84,29 @@ class ApiResponseTest extends TestCase
         $this->assertGreaterThan(array_search('message', $keys), array_search('version', $keys));
     }
 
+    public function test_custom_headers_are_sent_with_response()
+    {
+        $result = \ApiResponse::headers(['X-Request-Id' => 'abc123'])->success();
+
+        $this->assertSame('abc123', $result->headers->get('X-Request-Id'));
+    }
+
+    public function test_headers_do_not_appear_in_json_payload()
+    {
+        $result = \ApiResponse::headers(['X-Request-Id' => 'abc123'])->success();
+        $data = $result->getData(true);
+
+        $this->assertArrayNotHasKey('headers', $data);
+        $this->assertArrayNotHasKey('X-Request-Id', $data);
+    }
+
+    public function test_headers_work_with_failed_response()
+    {
+        $result = \ApiResponse::headers(['X-Custom' => 'value'])->failed();
+
+        $this->assertSame('value', $result->headers->get('X-Custom'));
+    }
+
     public function test_each_resolution_returns_a_fresh_instance()
     {
         $instance1 = app('ApiResponse');
