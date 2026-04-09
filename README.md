@@ -7,7 +7,7 @@
 [![License](https://poser.pugx.org/raditzfarhan/laravel-api-response/license?format=flat-square)](https://packagist.org/packages/raditzfarhan/laravel-api-response)
 [![StyleCI](https://github.styleci.io/repos/7548986/shield?style=square)](https://github.com/raditzfarhan/laravel-api-response)
 
-A fluent API response formatter for Laravel. Returns consistent JSON responses across your entire application with minimal boilerplate.
+A fluent API response formatter for Laravel. Returns consistent JSON responses across your application with minimal boilerplate.
 
 ## Requirements
 
@@ -21,18 +21,6 @@ composer require raditzfarhan/laravel-api-response
 ```
 
 The service provider is auto-discovered. No manual registration needed.
-
-### Lumen
-
-Edit `bootstrap/app.php`:
-
-```php
-$app->register(RaditzFarhan\ApiResponse\ApiResponseServiceProvider::class);
-
-$app->withFacades(true, [
-    RaditzFarhan\ApiResponse\Facades\ApiResponse::class => 'ApiResponse'
-]);
-```
 
 ## Basic Usage
 
