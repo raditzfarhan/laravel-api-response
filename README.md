@@ -24,17 +24,19 @@ The service provider is auto-discovered. No manual registration needed.
 
 ## Basic Usage
 
+Two styles are available — use whichever fits your preference:
+
 ```php
-use ApiResponse;
+// Via the response() helper macro (auto-registered)
+return response()->api()->success();
+return response()->api()->failed();
 
-// Success (HTTP 200)
+// Via the facade
 return ApiResponse::success();
-
-// Failed (HTTP 500)
 return ApiResponse::failed();
 ```
 
-Both methods return an `Illuminate\Http\JsonResponse` instance.
+Both return an `Illuminate\Http\JsonResponse` instance.
 
 **Success response:**
 ```json
