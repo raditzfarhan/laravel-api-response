@@ -4,6 +4,14 @@ namespace RaditzFarhan\ApiResponse\Tests;
 
 class ApiResponseTest extends TestCase
 {
+    public function test_response_macro_is_registered()
+    {
+        $result = response()->api()->success();
+
+        $this->assertSame(200, $result->getStatusCode());
+        $this->assertTrue($result->getData(true)['status']);
+    }
+
     public function test_code_attribute_appears_between_http_code_and_message()
     {
         $result = \ApiResponse::code(10001)->notFound();

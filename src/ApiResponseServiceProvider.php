@@ -2,6 +2,7 @@
 
 namespace RaditzFarhan\ApiResponse;
 
+use Illuminate\Routing\ResponseFactory;
 use Illuminate\Support\ServiceProvider;
 
 class ApiResponseServiceProvider extends ServiceProvider
@@ -19,6 +20,10 @@ class ApiResponseServiceProvider extends ServiceProvider
             __DIR__ . '/../resources/lang' => resource_path('lang/vendor/laravel-api-response'),
             __DIR__ . '/../config/laravel-api-response.php' => config_path('laravel-api-response.php'),
         ]);
+
+        ResponseFactory::macro('api', function () {
+            return app('ApiResponse');
+        });
     }
 
     /**
