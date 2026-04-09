@@ -1,8 +1,8 @@
 {
 	"name": "raditzfarhan/laravel-api-response",
-	"description": "Laravel and Lumen API response transformer",
+	"description": "Laravel API response formatter",
 	"type": "laravel-package",
-	"keywords": [ "laravel", "lumen", "api", "response", "transformer", "responder" ],
+	"keywords": [ "laravel", "api", "response", "formatter", "transformer" ],
 	"require": {
 		"php": "^8.0",
 		"illuminate/support": "^9.0|^10.0|^11.0|^12.0|^13.0",
