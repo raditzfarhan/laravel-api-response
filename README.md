@@ -10,8 +10,8 @@
 Laravel and Lumen API response transformer/formatter.
 
 ## Requirements
-- PHP ^7.4 | ^8.0
-- Laravel 7, 8, 9 or 10
+- PHP ^8.0
+- Laravel 9, 10, 11, 12 or 13
 
 ## Installation
 
