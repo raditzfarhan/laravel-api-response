@@ -2,6 +2,11 @@
 
 All notable changes to Laravel API Response will be documented in this file.
 
+## Version 1.3.2 (2026-04-11)
+
+### Fixed
+- Fix `response()->api()` macro registration by replacing `ResponseFactory` with `Response` facade.
+
 ## Version 1.3.1 (2026-04-09)
 
 ### Added

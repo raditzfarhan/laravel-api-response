@@ -2,8 +2,8 @@
 
 namespace RaditzFarhan\ApiResponse;
 
-use Illuminate\Routing\ResponseFactory;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Response;
 
 class ApiResponseServiceProvider extends ServiceProvider
 {
@@ -21,7 +21,7 @@ class ApiResponseServiceProvider extends ServiceProvider
             __DIR__ . '/../config/laravel-api-response.php' => config_path('laravel-api-response.php'),
         ]);
 
-        ResponseFactory::macro('api', function () {
+        Response::macro('api', function () {
             return app('ApiResponse');
         });
     }
