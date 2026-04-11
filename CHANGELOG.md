@@ -2,6 +2,11 @@
 
 All notable changes to Laravel API Response will be documented in this file.
 
+## Version 1.3.3 (2026-04-11)
+
+### Changed
+- `validationError()` now accepts an optional `$message` parameter, allowing callers to pass `$e->getMessage()` from `ValidationException` instead of the default `"Validation error."` string.
+
 ## Version 1.3.2 (2026-04-11)
 
 ### Fixed
