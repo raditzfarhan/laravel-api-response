@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
  * @method static \Illuminate\Http\JsonResponse requestTimeout(?string $message = null)
  * @method static \Illuminate\Http\JsonResponse conflict(?string $message = null)
  * @method static \Illuminate\Http\JsonResponse gone(?string $message = null)
- * @method static \Illuminate\Http\JsonResponse validationError(?array $errors = null)
+ * @method static \Illuminate\Http\JsonResponse validationError(?array $errors = null, ?string $message = null)
  * @method static \Illuminate\Http\JsonResponse tooManyRequests(?string $message = null)
  * @method static \Illuminate\Http\JsonResponse internalServerError(?string $message = null)
  * @method static \Illuminate\Http\JsonResponse notImplemented(?string $message = null)
@@ -257,7 +257,7 @@ class ApiResponse
      *
      * @return Illuminate\Http\Response
      */
-    public function validationError($errors = null)
+    public function validationError($errors = null, $message = null)
     {
         $this->http_code = Response::HTTP_UNPROCESSABLE_ENTITY;
 
@@ -266,7 +266,7 @@ class ApiResponse
         }
 
         if (!$this->message) {
-            $this->message = trans('laravel-api-response::messages.validation_error') . ".";
+            $this->message = $message ?? trans('laravel-api-response::messages.validation_error') . ".";
         }
 
         return $this->failed();
