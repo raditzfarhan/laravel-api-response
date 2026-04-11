@@ -205,6 +205,73 @@ return ApiResponse::collection(Post::paginate(25));
 }
 ```
 
+## Exception Handling
+
+To ensure all API error responses — including Laravel's built-in exceptions — follow the same structure, register custom renderers in your exception handler.
+
+**Laravel 11+ (`bootstrap/app.php`):**
+
+```php
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use RaditzFarhan\ApiResponse\Facades\ApiResponse;
+
+->withExceptions(function (Exceptions $exceptions) {
+    $exceptions->render(function (ValidationException $e, Request $request) {
+        if ($request->expectsJson()) {
+            return ApiResponse::validationError($e->errors(), $e->getMessage());
+        }
+    });
+
+    $exceptions->render(function (AuthenticationException $e, Request $request) {
+        if ($request->expectsJson()) {
+            return ApiResponse::unauthorized();
+        }
+    });
+
+    $exceptions->render(function (NotFoundHttpException $e, Request $request) {
+        if ($request->expectsJson()) {
+            return ApiResponse::notFound();
+        }
+    });
+})
+```
+
+**Laravel 9 / 10 (`app/Exceptions/Handler.php`):**
+
+```php
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use RaditzFarhan\ApiResponse\Facades\ApiResponse;
+
+public function register(): void
+{
+    $this->renderable(function (ValidationException $e, Request $request) {
+        if ($request->expectsJson()) {
+            return ApiResponse::validationError($e->errors(), $e->getMessage());
+        }
+    });
+
+    $this->renderable(function (AuthenticationException $e, Request $request) {
+        if ($request->expectsJson()) {
+            return ApiResponse::unauthorized();
+        }
+    });
+
+    $this->renderable(function (NotFoundHttpException $e, Request $request) {
+        if ($request->expectsJson()) {
+            return ApiResponse::notFound();
+        }
+    });
+}
+```
+
+The `$request->expectsJson()` guard ensures non-API routes (web, Blade) are unaffected and still render the default HTML error pages.
+
 ## Configuration
 
 Publish the config file to customise key names and add global fields:
