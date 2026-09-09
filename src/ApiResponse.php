@@ -513,7 +513,7 @@ class ApiResponse
         $attr_name = Str::snake($name);
 
         if (collect($this->attributes)->contains($attr_name)) {
-            $this->$attr_name = count($arguments) > 1 ? $arguments : (isset($arguments[0]) ? $arguments[0] : $arguments);
+            $this->$attr_name = count($arguments) > 1 ? $arguments : (array_key_exists(0, $arguments) ? $arguments[0] : $arguments);
 
             return $this;
         } else {

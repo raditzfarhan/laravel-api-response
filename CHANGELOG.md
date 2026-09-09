@@ -2,6 +2,11 @@
 
 All notable changes to Laravel API Response will be documented in this file.
 
+## Version 1.3.4 (2026-09-09)
+
+### Fixed
+- Fix dynamic attribute setters wrapping a `null` argument in an array. Passing `null` to a fluent method (e.g. `->data(null)`) now sets the attribute to `null` instead of `[null]`, by using `array_key_exists` instead of `isset` when reading the argument.
+
 ## Version 1.3.3 (2026-04-11)
 
 ### Changed
